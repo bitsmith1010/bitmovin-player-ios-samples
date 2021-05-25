@@ -12,6 +12,7 @@ import BitmovinPlayer
 final class ViewController: UIViewController {
 
     var player: Player?
+    var playerView: BMPBitmovinPlayerView?
 
     deinit {
         player?.destroy()
@@ -52,6 +53,7 @@ final class ViewController: UIViewController {
             view.addSubview(playerView)
             view.bringSubviewToFront(playerView)
 
+            self.playerView = playerView
             self.player = player
         } catch {
             print("Configuration error: \(error)")
@@ -63,10 +65,12 @@ extension ViewController: PlayerListener {
 
     func onPlay(_ event: PlayEvent) {
         print("onPlay \(event.time)")
+        playerView?.scalingMode = BMPScalingMode.fit
     }
 
     func onPaused(_ event: PausedEvent) {
         print("onPaused \(event.time)")
+        playerView?.scalingMode = BMPScalingMode.zoom
     }
 
     func onTimeChanged(_ event: TimeChangedEvent) {
