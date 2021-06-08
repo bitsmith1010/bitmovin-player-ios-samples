@@ -29,6 +29,8 @@ final class ViewController: UIViewController {
 
         // Create player configuration
         let playerConfig = PlayerConfig()
+        
+        playerConfig.styleConfig.userInterfaceType = .subtitle
 
         // Create player based on player config
         player = PlayerFactory.create(playerConfig: playerConfig)
