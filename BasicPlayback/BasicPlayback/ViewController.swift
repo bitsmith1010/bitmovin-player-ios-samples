@@ -11,6 +11,8 @@ import BitmovinPlayer
 
 final class ViewController: UIViewController {
     var player: Player!
+    var playerView: PlayerView2?
+    var zoomState = -1
 
     deinit {
         player?.destroy()
@@ -31,12 +33,14 @@ final class ViewController: UIViewController {
         let playerConfig = PlayerConfig()
         
         playerConfig.styleConfig.userInterfaceType = .subtitle
-
+        
         // Create player based on player config
         player = PlayerFactory.create(playerConfig: playerConfig)
 
         // Create player view and pass the player instance to it
-        let playerView = PlayerView(player: player, frame: .zero)
+        let playerView = PlayerView2(player: player, frame: .zero)
+        
+        self.playerView = playerView
 
         // Listen to player events
         player.add(listener: self)
@@ -52,6 +56,15 @@ final class ViewController: UIViewController {
         // Set a poster image
         sourceConfig.posterSource = posterUrl
         player.load(sourceConfig: sourceConfig)
+        player.play()
+        player.mute()
+        weak var timer: Timer?
+        timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) {
+            [weak self] _ in
+            if (self!.zoomState == -1) { playerView.setZoom(state: true)}
+            else {playerView.setZoom(state: false)}
+            self!.zoomState *= -1
+        }
     }
 }
 
